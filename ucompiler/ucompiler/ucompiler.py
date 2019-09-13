@@ -423,6 +423,19 @@ class Compiler(ast.NodeVisitor):
     def visit_Bytes(self, node):
         self.bc.add(opc.LOAD_CONST_OBJ, node.s)
 
+    def visit_NameConstant(self, node):
+        if node.value is None:
+            self.bc.add(opc.LOAD_CONST_NONE)
+        elif node.value is True:
+            self.bc.add(opc.LOAD_CONST_TRUE)
+        elif node.value is False:
+            self.bc.add(opc.LOAD_CONST_FALSE)
+        else:
+            assert 0
+
+    def visit_Ellipsis(self, node):
+        self.bc.add(opc.LOAD_CONST_OBJ, Ellipsis)
+
 
 def compile_ast(tree, filename="<file>"):
     symtable_b = usymtable.SymbolTableBuilder()
